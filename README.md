@@ -55,3 +55,13 @@ poetry run ./reflex_rerun.sh
 
 The application will be available at `http://localhost:3000`.
 
+### Clean Rebuild & Run
+
+To fully clean the environment, reinstall all dependencies, and start the app in one step:
+
+```bash
+./proj_reinstall.sh --with-rerun
+```
+
+This will remove existing Poetry virtual environments and Reflex artifacts, recreate the environment from scratch, and automatically launch the app afterwards.
+
