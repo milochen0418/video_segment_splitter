@@ -7,6 +7,7 @@ from typing import Optional
 from moviepy import VideoFileClip
 from pathlib import Path
 from pydantic import BaseModel
+from reflex.config import get_config
 
 
 class VideoMetadata(BaseModel):
@@ -152,11 +153,12 @@ class VideoState(rx.State):
                 m = int(seg_len % 3600 // 60)
                 s = int(seg_len % 60)
                 formatted_duration = f"{h:02d}:{m:02d}:{s:02d}"
+                api_url = str(get_config().api_url or "http://localhost:8000")
                 segment = VideoSegment(
                     filename=segment_filename,
                     duration_formatted=formatted_duration,
                     file_path=str(segment_path),
-                    download_url=f"/_upload/{segment_filename}",
+                    download_url=f"{api_url}/_upload/{segment_filename}",
                 )
                 generated_segments.append(segment)
                 progress = int((i + 1) / segment_count * 100)
@@ -201,7 +203,8 @@ class VideoState(rx.State):
                     if file_to_add.exists():
                         zipf.write(file_to_add, arcname=seg.filename)
             async with self:
-                self.zip_download_url = f"/_upload/{zip_filename}"
+                api_url = str(get_config().api_url or "http://localhost:8000")
+                self.zip_download_url = f"{api_url}/_upload/{zip_filename}"
                 self.is_zipping = False
             yield rx.toast.success("ZIP archive created!")
         except Exception as e:

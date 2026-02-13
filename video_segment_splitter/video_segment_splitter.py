@@ -75,6 +75,7 @@ def index() -> rx.Component:
                                             ),
                                             "Download ZIP Bundle",
                                             href=VideoState.zip_download_url,
+                                            target="_blank",
                                             class_name="flex items-center px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-sm",
                                         ),
                                         rx.el.button(
@@ -142,6 +143,7 @@ def index() -> rx.Component:
                                                 ),
                                                 href=segment.download_url,
                                                 download=segment.filename,
+                                                target="_blank",
                                                 class_name="flex items-center justify-center h-10 w-10 bg-white border border-gray-200 rounded-xl text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200",
                                             ),
                                             class_name="flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl hover:border-blue-200 hover:shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
