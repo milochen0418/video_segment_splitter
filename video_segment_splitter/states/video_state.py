@@ -55,12 +55,12 @@ class VideoState(rx.State):
         return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
     @rx.event
-    def set_segment_count(self, value: str):
+    def set_segment_count(self, value: float):
         try:
             val = int(value)
             if 1 <= val <= 20:
                 self.segment_count = val
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
     @rx.event
