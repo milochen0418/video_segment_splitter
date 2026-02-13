@@ -22,18 +22,9 @@ def index() -> rx.Component:
                 ),
                 rx.el.nav(
                     rx.el.a(
-                        "Home",
-                        href="/",
-                        class_name="text-sm font-semibold text-gray-600 hover:text-blue-600",
-                    ),
-                    rx.el.a(
-                        "Features",
-                        href="#",
-                        class_name="text-sm font-semibold text-gray-600 hover:text-blue-600",
-                    ),
-                    rx.el.a(
                         "GitHub",
-                        href="https://github.com",
+                        href="https://github.com/milochen0418/video_segment_splitter",
+                        target="_blank",
                         class_name="px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-colors",
                     ),
                     class_name="flex items-center gap-8",
@@ -173,7 +164,7 @@ def index() -> rx.Component:
             ),
             rx.el.footer(
                 rx.el.p(
-                    "© 2024 ClipShift. Powered by Reflex & MoviePy.",
+                    "© 2026 ClipShift. Powered by Reflex & MoviePy.",
                     class_name="text-sm text-gray-400 font-medium",
                 ),
                 class_name="mt-24 pb-12 text-center",
