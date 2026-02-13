@@ -12,9 +12,23 @@ This project is managed with [Poetry](https://python-poetry.org/).
 
 ### Prerequisites
 
-- Python 3.11.x
-- Poetry
+Based on this project's dependencies, install the following system-level packages first via Homebrew (macOS):
 
+```bash
+brew install python@3.11 ffmpeg poetry
+```
+
+| Package | Reason |
+|---------|--------|
+| `python@3.11` | The project requires Python ~3.11 as specified in `pyproject.toml` |
+| `ffmpeg` | Required by `moviepy` for video cutting, merging, and transcoding |
+| `poetry` | Python dependency manager used to manage this project |
+
+After installing Playwright (via `poetry install`), you also need to download browser binaries:
+
+```bash
+poetry run playwright install
+```
 
 ### Installation
 
