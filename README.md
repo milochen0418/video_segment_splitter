@@ -2,6 +2,49 @@
 
 > Important: Before working on this project, read [AGENTS.md](AGENTS.md) for required workflows and tooling expectations.
 
+## Quick Start (With Screenshots)
+
+Follow these steps to split your video quickly, even on your first use:
+
+### 1) Open the landing page
+
+After opening the app, you will see the upload area in the center.
+
+![Landing page](docs/images/landing-page.png)
+
+### 2) Upload your video
+
+Drag and drop your video into the upload area (or click to browse). Supported formats: MP4, MOV, AVI.
+
+![Uploaded video and metadata](docs/images/uploaded-video-and-its-info.png)
+
+### 3) Set the number of segments
+
+Use **Number of Segments** (number input or slider) to choose how many parts to create. The UI also shows the estimated duration per segment.
+
+![Select number of segments](docs/images/select-numbers-of-segments.png)
+
+### 4) Start splitting
+
+Click **Start Splitting Video** to begin processing. A progress state will be shown while splitting.
+
+![Video splitting in progress](docs/images/video-spliting-busy.png)
+
+### 5) (Optional) Monitor system load
+
+When splitting longer videos, you can open the system monitor to observe CPU and memory usage.
+
+![Video splitting with system monitor](docs/images/video-spliting-with-system-monitor.png)
+
+### 6) Download results
+
+After processing completes, the generated clips will appear in **Output Clips**. You can:
+
+- Download clips one by one
+- Click **Zip All Clips** to generate and download a ZIP bundle
+
+![Video splitting download result](docs/images/download-result.png)
+
 
 
 ## Getting Started
