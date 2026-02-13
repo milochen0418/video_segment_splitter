@@ -3,11 +3,24 @@ import os
 import random
 import string
 import asyncio
+import shutil
 from typing import Optional
 from moviepy import VideoFileClip
 from pathlib import Path
 from pydantic import BaseModel
 from reflex.config import get_config
+
+
+def _get_ffmpeg_path() -> str:
+    """Find ffmpeg binary. Prefer system ffmpeg, fallback to imageio-ffmpeg."""
+    path = shutil.which("ffmpeg")
+    if path:
+        return path
+    try:
+        from imageio_ffmpeg import get_ffmpeg_exe
+        return get_ffmpeg_exe()
+    except Exception:
+        return "ffmpeg"
 
 
 class VideoMetadata(BaseModel):
@@ -128,27 +141,51 @@ class VideoState(rx.State):
                 input_path = self.video_metadata.file_path
                 segment_count = self.segment_count
                 original_filename = self.video_metadata.filename
-            clip = VideoFileClip(input_path)
-            duration = clip.duration
-            segment_duration = duration / segment_count
+                total_duration = self.video_metadata.duration_raw
+
+            segment_duration = total_duration / segment_count
             generated_segments = []
             upload_dir = rx.get_upload_dir()
+            ffmpeg = _get_ffmpeg_path()
+            max_threads = max(1, (os.cpu_count() or 4) // 2)
+
             for i in range(segment_count):
                 start_time = i * segment_duration
-                end_time = min((i + 1) * segment_duration, duration)
-                subclip = clip.subclipped(start_time, end_time)
+                end_time = min((i + 1) * segment_duration, total_duration)
+                seg_len = end_time - start_time
+
                 safe_filename = Path(original_filename).stem
                 segment_filename = f"{safe_filename}_part_{i + 1:03d}.mp4"
                 segment_path = upload_dir / segment_filename
-                subclip.write_videofile(
+
+                # Call ffmpeg directly as an async subprocess.
+                # This runs in a completely separate OS process —
+                # zero GIL contention, zero blocking of the Python event loop.
+                proc = await asyncio.create_subprocess_exec(
+                    ffmpeg,
+                    "-y",              # overwrite
+                    "-ss", str(start_time),
+                    "-i", str(input_path),
+                    "-t", str(seg_len),
+                    "-c:v", "libx264",
+                    "-c:a", "aac",
+                    "-threads", str(max_threads),
+                    "-avoid_negative_ts", "make_zero",
+                    "-loglevel", "error",
                     str(segment_path),
-                    codec="libx264",
-                    audio_codec="aac",
-                    temp_audiofile=str(upload_dir / f"temp-audio-{i}.m4a"),
-                    remove_temp=True,
-                    logger=None,
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.PIPE,
                 )
-                seg_len = end_time - start_time
+                _, stderr = await proc.communicate()
+
+                if proc.returncode != 0:
+                    import logging
+                    logging.error(f"ffmpeg error for segment {i+1}: {stderr.decode()}")
+                    async with self:
+                        self.is_processing = False
+                    yield rx.toast.error(f"ffmpeg failed on segment {i+1}")
+                    return
+
                 h = int(seg_len // 3600)
                 m = int(seg_len % 3600 // 60)
                 s = int(seg_len % 60)
@@ -164,7 +201,7 @@ class VideoState(rx.State):
                 progress = int((i + 1) / segment_count * 100)
                 async with self:
                     self.processing_progress = progress
-            clip.close()
+
             async with self:
                 self.generated_segments = generated_segments
                 self.is_processing = False

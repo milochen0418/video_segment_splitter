@@ -3,6 +3,10 @@ from video_segment_splitter.states.video_state import VideoState
 from video_segment_splitter.components.upload_zone import upload_zone
 from video_segment_splitter.components.metadata_card import metadata_card
 from video_segment_splitter.components.controls import controls
+from video_segment_splitter.components.system_monitor import (
+    system_busy_button,
+    system_monitor_modal,
+)
 
 
 def index() -> rx.Component:
@@ -10,8 +14,8 @@ def index() -> rx.Component:
         rx.el.div(
             class_name="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-50 to-white -z-10"
         ),
-        rx.el.div(
-            rx.el.header(
+        rx.el.header(
+            rx.el.div(
                 rx.el.div(
                     rx.icon("video", class_name="h-8 w-8 text-blue-600"),
                     rx.el.h1(
@@ -29,8 +33,12 @@ def index() -> rx.Component:
                     ),
                     class_name="flex items-center gap-8",
                 ),
-                class_name="flex justify-between items-center mb-16",
+                class_name="flex justify-between items-center max-w-6xl mx-auto px-8",
             ),
+            class_name="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 py-4 z-50",
+        ),
+        rx.el.div(
+            rx.el.div(class_name="h-20"),
             rx.el.div(
                 rx.el.h2(
                     "Split videos with precision.",
@@ -171,6 +179,8 @@ def index() -> rx.Component:
             ),
             class_name="max-w-6xl mx-auto px-6 py-8",
         ),
+        system_busy_button(),
+        system_monitor_modal(),
         class_name="font-['Inter'] min-h-screen bg-white relative overflow-x-hidden",
     )
 
