@@ -101,7 +101,7 @@ class VideoState(rx.State):
                 import logging
 
                 logging.exception(f"Error processing video: {e}")
-                yield rx.toast("Failed to process video metadata", variant="error")
+                yield rx.toast.error("Failed to process video metadata")
         self.is_uploading = False
         self.upload_progress = 100
 
@@ -140,12 +140,11 @@ class VideoState(rx.State):
                 segment_filename = f"{safe_filename}_part_{i + 1:03d}.mp4"
                 segment_path = upload_dir / segment_filename
                 subclip.write_videofile(
-                    segment_path,
+                    str(segment_path),
                     codec="libx264",
                     audio_codec="aac",
                     temp_audiofile=str(upload_dir / f"temp-audio-{i}.m4a"),
                     remove_temp=True,
-                    verbose=False,
                     logger=None,
                 )
                 seg_len = end_time - start_time
@@ -168,14 +167,14 @@ class VideoState(rx.State):
                 self.generated_segments = generated_segments
                 self.is_processing = False
                 self.zip_download_url = ""
-            yield rx.toast("Video split successfully!", variant="success")
+            yield rx.toast.success("Video split successfully!")
         except Exception as e:
             import logging
 
             logging.exception(f"Error splitting video: {e}")
             async with self:
                 self.is_processing = False
-                yield rx.toast(f"Error splitting video: {str(e)}", variant="error")
+                yield rx.toast.error(f"Error splitting video: {str(e)}")
 
     @rx.event(background=True)
     async def create_zip_download(self):
@@ -204,11 +203,11 @@ class VideoState(rx.State):
             async with self:
                 self.zip_download_url = f"/_upload/{zip_filename}"
                 self.is_zipping = False
-            yield rx.toast("ZIP archive created!", variant="success")
+            yield rx.toast.success("ZIP archive created!")
         except Exception as e:
             import logging
 
             logging.exception(f"Error creating ZIP: {e}")
             async with self:
                 self.is_zipping = False
-            yield rx.toast("Failed to create ZIP archive", variant="error")
+            yield rx.toast.error("Failed to create ZIP archive")
