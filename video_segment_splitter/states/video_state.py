@@ -6,9 +6,10 @@ import asyncio
 from typing import Optional
 from moviepy import VideoFileClip
 from pathlib import Path
+from pydantic import BaseModel
 
 
-class VideoMetadata(rx.Base):
+class VideoMetadata(BaseModel):
     filename: str = ""
     duration_raw: float = 0.0
     duration_formatted: str = "00:00:00"
@@ -17,7 +18,7 @@ class VideoMetadata(rx.Base):
     file_path: str = ""
 
 
-class VideoSegment(rx.Base):
+class VideoSegment(BaseModel):
     filename: str = ""
     duration_formatted: str = ""
     file_path: str = ""
