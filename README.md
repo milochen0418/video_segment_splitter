@@ -4,7 +4,7 @@
 
 ## Software Design Document
 
-The software design document (SDD) for this project is available at [docs/Video Segment Splitter (ClipShift) - Software Design Document (SDD).pdf](docs/Video%20Segment%20Splitter%20(ClipShift)%20-%20Software%20Design%20Document%20(SDD).pdf).
+The software design document (SDD) for this project is available at [Video Segment Splitter (ClipShift) - Software Design Document (SDD).pdf](docs/Video%20Segment%20Splitter%20(ClipShift)%20-%20Software%20Design%20Document%20(SDD).pdf).
 
 ## Quick Start (With Screenshots)
 
