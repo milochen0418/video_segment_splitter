@@ -2,6 +2,10 @@
 
 > Important: Before working on this project, read [AGENTS.md](AGENTS.md) for required workflows and tooling expectations.
 
+## Software Design Document
+
+The software design document (SDD) for this project is available at [docs/Video Segment Splitter (ClipShift) - Software Design Document (SDD).pdf](docs/Video%20Segment%20Splitter%20(ClipShift)%20-%20Software%20Design%20Document%20(SDD).pdf).
+
 ## Quick Start (With Screenshots)
 
 Follow these steps to split your video quickly, even on your first use:
