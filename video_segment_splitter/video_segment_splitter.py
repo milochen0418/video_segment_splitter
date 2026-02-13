@@ -35,7 +35,7 @@ def index() -> rx.Component:
                 ),
                 class_name="flex justify-between items-center max-w-6xl mx-auto px-8",
             ),
-            class_name="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 py-4 z-50",
+            class_name="fixed top-0 left-0 w-full bg-white/60 backdrop-blur-lg border-b border-gray-200/50 py-4 z-50 shadow-sm",
         ),
         rx.el.div(
             rx.el.div(class_name="h-20"),
