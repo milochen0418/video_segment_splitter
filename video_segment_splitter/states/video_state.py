@@ -23,6 +23,64 @@ def _get_ffmpeg_path() -> str:
         return "ffmpeg"
 
 
+async def _embed_thumbnail(ffmpeg: str, segment_path: Path) -> None:
+    """Extract the first frame of segment_path and embed it as attached_pic."""
+    import logging
+
+    thumb_path = segment_path.with_suffix(".thumb.png")
+    muxed_path = segment_path.with_suffix(".muxed.mp4")
+    try:
+        # Step 1: extract first frame
+        proc1 = await asyncio.create_subprocess_exec(
+            ffmpeg,
+            "-y",
+            "-i", str(segment_path),
+            "-vframes", "1",
+            "-an",
+            "-loglevel", "error",
+            str(thumb_path),
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, stderr1 = await proc1.communicate()
+        if proc1.returncode != 0:
+            logging.warning(f"thumbnail extract failed: {stderr1.decode()}")
+            return
+
+        # Step 2: mux thumbnail as attached_pic into a new file
+        proc2 = await asyncio.create_subprocess_exec(
+            ffmpeg,
+            "-y",
+            "-i", str(segment_path),
+            "-i", str(thumb_path),
+            "-map", "0",
+            "-map", "1",
+            "-c", "copy",
+            "-c:v:1", "png",
+            "-disposition:v:1", "attached_pic",
+            "-loglevel", "error",
+            str(muxed_path),
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, stderr2 = await proc2.communicate()
+        if proc2.returncode != 0:
+            logging.warning(f"thumbnail mux failed: {stderr2.decode()}")
+            return
+
+        # Replace original segment with the muxed version
+        os.replace(str(muxed_path), str(segment_path))
+    except Exception:
+        logging.exception("Unexpected error embedding thumbnail")
+    finally:
+        for p in (thumb_path, muxed_path):
+            try:
+                if p.exists():
+                    p.unlink()
+            except Exception:
+                pass
+
+
 class VideoMetadata(BaseModel):
     filename: str = ""
     duration_raw: float = 0.0
@@ -185,6 +243,9 @@ class VideoState(rx.State):
                         self.is_processing = False
                     yield rx.toast.error(f"ffmpeg failed on segment {i+1}")
                     return
+
+                # Embed first-frame thumbnail as attached_pic
+                await _embed_thumbnail(ffmpeg, segment_path)
 
                 h = int(seg_len // 3600)
                 m = int(seg_len % 3600 // 60)
