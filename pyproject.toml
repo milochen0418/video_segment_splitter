@@ -14,6 +14,7 @@ granian = "2.7.1"
 reflex-mouse-track = "*"
 fastapi = "*"
 psutil = "^7.2.2"
+sqlalchemy = { version = "^2.0", extras = ["asyncio"] }
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]
