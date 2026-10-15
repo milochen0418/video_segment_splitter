@@ -140,7 +140,6 @@ class VideoState(rx.State):
         self.is_uploading = True
         self.upload_progress = 0
         for file in files:
-            upload_data = await file.read()
             upload_dir = rx.get_upload_dir()
             upload_dir.mkdir(parents=True, exist_ok=True)
             unique_name = (
@@ -149,8 +148,10 @@ class VideoState(rx.State):
                 + file.name
             )
             file_path = upload_dir / unique_name
+            # Copy in 1 MB chunks so a large video never sits in memory whole.
             with file_path.open("wb") as f:
-                f.write(upload_data)
+                while chunk := await file.read(1024 * 1024):
+                    f.write(chunk)
             try:
                 clip = VideoFileClip(file_path)
                 duration = clip.duration

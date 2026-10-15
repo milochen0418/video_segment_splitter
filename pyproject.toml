@@ -8,9 +8,9 @@ packages = [{ include = "video_segment_splitter" }]
 
 [tool.poetry.dependencies]
 python = "~3.11"
-reflex = "0.8.24.post1"
+reflex = "0.10.0"
 moviepy = "*"
-granian = "2.7.1"
+granian = "2.8.4"
 reflex-mouse-track = "*"
 fastapi = "*"
 psutil = "^7.2.2"
