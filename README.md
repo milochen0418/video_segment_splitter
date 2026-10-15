@@ -67,7 +67,7 @@ brew install uv ffmpeg
 
 | Package | Reason |
 |---------|--------|
-| `uv` | Python package and project manager used to manage this project; it also installs Python 3.11 (pinned in `.python-version`) when it is missing |
+| `uv` | Python package and project manager used to manage this project; it also installs Python 3.14 (pinned in `.python-version`) when it is missing |
 | `ffmpeg` | Required by `moviepy` for video cutting, merging, and transcoding |
 
 ### Installation

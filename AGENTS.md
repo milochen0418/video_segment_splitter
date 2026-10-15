@@ -13,7 +13,7 @@ If you already read them earlier in the session, **re-check** when unsure.
 
 ## 1) Python / uv requirements (strict)
 
-This project is managed with **uv** and targets **Python 3.11**, pinned in `.python-version`.
+This project is managed with **uv** and targets **Python 3.14**, pinned in `.python-version`.
 
 - uv picks that version by itself (and downloads it if it is not installed), so there is no env to switch by hand.
 - Create or update the environment (`.venv/` in the project root):
