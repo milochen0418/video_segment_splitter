@@ -4,6 +4,7 @@ config = rx.Config(
     app_name="video_segment_splitter",
     api_url="http://localhost:8000",
     plugins=[
+        rx.plugins.RadixThemesPlugin(theme=rx.theme(appearance="light")),
         rx.plugins.TailwindV4Plugin(),
         rx.plugins.SitemapPlugin(),
     ],
