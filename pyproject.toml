@@ -1,28 +1,27 @@
-[tool.poetry]
+[project]
 name = "video-segment-splitter"
 version = "0.1.0"
 description = "A Reflex app for splitting video segments"
-authors = ["milochen0418 <milo_chen@mail2000.com.tw>"]
+authors = [{ name = "milochen0418", email = "milo_chen@mail2000.com.tw" }]
 readme = "README.md"
-packages = [{ include = "video_segment_splitter" }]
-
-[tool.poetry.dependencies]
 # 3.11 floor: reflex 0.10 and the re_ddns smart-launcher image (python:3.11).
 # <3.15 cap: moviepy pins pillow<12, whose wheels stop at 3.14.
-python = ">=3.11,<3.15"
-reflex = "0.10.0"
-moviepy = "^2.2"
-imageio-ffmpeg = ">=0.6"
-granian = "2.8.4"
-pydantic = "^2.12"
-psutil = "^7.2.2"
-
-[build-system]
-requires = ["poetry-core>=1.9.0"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "reflex==0.10.0",
+    "moviepy>=2.2,<3",
+    "imageio-ffmpeg>=0.6",
+    "granian==2.8.4",
+    "pydantic>=2.12,<3",
+    "psutil>=7.2.2,<8",
+]
 
 [dependency-groups]
 dev = [
-    "playwright (>=1.58.0,<2.0.0)",
-    "pytest (>=9.0.2,<10.0.0)"
+    "playwright>=1.58.0,<2.0.0",
+    "pytest>=9.0.2,<10.0.0",
 ]
+
+[tool.uv]
+# A Reflex app, not a library: install its dependencies only.
+package = false

@@ -55,41 +55,33 @@ After processing completes, the generated clips will appear in **Output Clips**.
 
 > Before making changes, read the project guidelines in [AGENTS.md](AGENTS.md).
 
-This project is managed with [Poetry](https://python-poetry.org/).
+This project is managed with [uv](https://docs.astral.sh/uv/).
 
 ### Prerequisites
 
 Based on this project's dependencies, install the following system-level packages first via Homebrew (macOS):
 
 ```bash
-brew install python@3.11 ffmpeg poetry
+brew install uv ffmpeg
 ```
 
 | Package | Reason |
 |---------|--------|
-| `python@3.11` | The project requires Python ~3.11 as specified in `pyproject.toml` |
+| `uv` | Python package and project manager used to manage this project; it also installs Python 3.11 (pinned in `.python-version`) when it is missing |
 | `ffmpeg` | Required by `moviepy` for video cutting, merging, and transcoding |
-| `poetry` | Python dependency manager used to manage this project |
-
-After installing Playwright (via `poetry install`), you also need to download browser binaries:
-
-```bash
-poetry run playwright install
-```
 
 ### Installation
 
-1. Ensure Poetry uses Python 3.11:
+Install dependencies into `.venv/` (uv uses Python 3.11 from `.python-version` and the exact versions in `uv.lock`):
 
 ```bash
-poetry env use python3.11
-poetry env info
+uv sync
 ```
 
-2. Install dependencies:
+Playwright (a dev dependency, installed by `uv sync`) also needs its browser binaries:
 
 ```bash
-poetry install
+uv run playwright install
 ```
 
 ### Running the App
@@ -97,7 +89,7 @@ poetry install
 Start the development server:
 
 ```bash
-poetry run ./reflex_rerun.sh
+uv run ./reflex_rerun.sh
 ```
 
 The application will be available at `http://localhost:3000`.
@@ -110,5 +102,5 @@ To fully clean the environment, reinstall all dependencies, and start the app in
 ./proj_reinstall.sh --with-rerun
 ```
 
-This will remove existing Poetry virtual environments and Reflex artifacts, recreate the environment from scratch, and automatically launch the app afterwards.
+This will remove the project's `.venv/` and Reflex artifacts, recreate the environment from scratch with `uv sync`, and automatically launch the app afterwards.
 

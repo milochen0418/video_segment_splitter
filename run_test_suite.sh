@@ -29,7 +29,7 @@ fi
 # We redirect input from /dev/null to prevent "suspended (tty input)" errors
 echo "Starting Reflex server in background..."
 echo "Logs will be written to $OUTPUT_DIR/reflex.log"
-poetry run reflex run < /dev/null > "$OUTPUT_DIR/reflex.log" 2>&1 &
+uv run reflex run < /dev/null > "$OUTPUT_DIR/reflex.log" 2>&1 &
 SERVER_PID=$!
 echo "Reflex Server started with PID: $SERVER_PID"
 
@@ -46,7 +46,7 @@ for ((i=1; i<=MAX_RETRIES; i++)); do
         echo "---------------------------------------------------"
         echo "Running Playwright test (testcases/$TEST_SCRIPT)..."
         echo "---------------------------------------------------"
-        poetry run python testcases/"$TEST_SCRIPT"
+        uv run python testcases/"$TEST_SCRIPT"
         TEST_EXIT_CODE=$?
         
         echo "---------------------------------------------------"

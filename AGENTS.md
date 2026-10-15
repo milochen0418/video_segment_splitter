@@ -11,26 +11,24 @@ Before making changes or running commands, **read all README.md files in this re
 
 If you already read them earlier in the session, **re-check** when unsure.
 
-## 1) Python / Poetry requirements (strict)
+## 1) Python / uv requirements (strict)
 
-This project targets **Python 3.11** (always set the Poetry env to 3.11 before installing deps or running commands).
+This project is managed with **uv** and targets **Python 3.11**, pinned in `.python-version`.
 
-- Prefer Poetry-managed environments.
-- If Poetry selected another Python (e.g. 3.12+), switch it:
+- uv picks that version by itself (and downloads it if it is not installed), so there is no env to switch by hand.
+- Create or update the environment (`.venv/` in the project root):
 
 ```bash
-poetry env use python3.11
-poetry env info
-poetry install
+uv sync
 ```
 
-If `python3.11` is not available on PATH, use an absolute path to the 3.11 executable.
+- Change dependencies with `uv add` / `uv remove` (or edit `pyproject.toml` and run `uv lock`), and commit `uv.lock` together with `pyproject.toml`.
 
-## 2) Default rule: use `poetry run` for scripts
+## 2) Default rule: use `uv run` for scripts
 
 When running any repo scripts, prefer:
 
-- `poetry run <command>`
+- `uv run <command>`
 
 This ensures the correct virtualenv + dependencies are used.
 
@@ -41,17 +39,17 @@ When you need to start/restart the Reflex app during development, **prefer the r
 Typical usage:
 
 ```bash
-poetry run ./reflex_rerun.sh
+uv run ./reflex_rerun.sh
 ```
 
 Notes:
-- Prefer `poetry run ./reflex_rerun.sh` over `poetry run reflex run`.
+- Prefer `uv run ./reflex_rerun.sh` over `uv run reflex run`.
 - This keeps the app startup/restart behavior consistent and helps it run stably on the expected ports: frontend `3000`, backend `8000`.
-- If you must run Reflex directly, still do it via Poetry: `poetry run reflex run`.
+- If you must run Reflex directly, still do it via uv: `uv run reflex run`.
 
 ## 3.5) Recreate the env: use `proj_reinstall.sh`
 
-To fully rebuild the local Poetry environment and clean Reflex artifacts, run:
+To fully rebuild the local uv environment (`.venv/`) and clean Reflex artifacts, run:
 
 ```bash
 ./proj_reinstall.sh
@@ -59,10 +57,10 @@ To fully rebuild the local Poetry environment and clean Reflex artifacts, run:
 
 Flags:
 
-- `--remove-only`: only clean artifacts and remove Poetry envs; no new env/install.
-- `--with-rerun`: after reinstall, run `poetry run ./reflex_rerun.sh` automatically.
+- `--remove-only`: only clean artifacts and remove `.venv/`; no new env/install.
+- `--with-rerun`: after reinstall, run `uv run ./reflex_rerun.sh` automatically.
 
-The script will auto-run `poetry lock` if `poetry install` fails due to a stale lockfile.
+`uv sync` re-locks by itself when `uv.lock` no longer matches `pyproject.toml`.
 
 ## 4) Running E2E suites: prefer `run_test_suite.sh`
 
@@ -78,7 +76,7 @@ Instead, use the repo runner, which manages:
 Run a suite like this:
 
 ```bash
-poetry run ./run_test_suite.sh smoke_home
+uv run ./run_test_suite.sh smoke_home
 ```
 
 Optional environment variables (see `testcases/README.md`):
@@ -94,5 +92,5 @@ Optional environment variables (see `testcases/README.md`):
 
 ## 6) Smart way to help the Agent to debug
 ```
-poetry run ./reflex_rerun.sh --loglevel debug
+uv run ./reflex_rerun.sh --loglevel debug
 ```

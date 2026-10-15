@@ -14,4 +14,4 @@ else
 fi
 
 echo "Starting Reflex app with args: $@"
-poetry run reflex run "$@"
+uv run reflex run "$@"
